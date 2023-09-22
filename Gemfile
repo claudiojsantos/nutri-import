@@ -30,13 +30,37 @@ gem "bootsnap", require: false
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 # gem "rack-cors"
 
+# mongo
+gem "mongo", "~> 2"
+gem 'mongoid', '~> 8.1', '>= 8.1.2'
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri mingw x64_mingw ]
+  gem 'byebug', '~> 11.1', '>= 11.1.3'
+  gem 'factory_bot_rails'
+  gem 'faker', '~> 3.1', '>= 3.1.1'
+  gem 'pry-byebug', '~> 3.10', '>= 3.10.1'
+  gem 'rspec', '~> 3.12'
+  gem 'rspec-expectations', '~> 3.12', '>= 3.12.2'
+  gem 'rspec-rails', '~> 6.0', '>= 6.0.1'
+  gem 'rubocop', '~> 1.46'
+  gem 'rubocop-performance', '~> 1.16'
+  gem 'rubocop-rails', '~> 2.18'
+  gem 'rubocop-rspec', '~> 2.18', '>= 2.18.1'
+  gem 'shoulda-matchers', '~> 5.0'
 end
 
 group :development do
   # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
   # gem "spring"
+  gem 'annotate'
+end
+
+group :test do
+  gem 'database_cleaner'
+  gem 'database_cleaner-active_record'
+  gem 'simplecov', require: false
+  gem 'webmock'
 end
 
