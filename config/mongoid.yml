@@ -1,0 +1,32 @@
+development:
+  clients:
+    default:
+      uri: mongodb+srv://importer:0YgljvCi68pcYWb3@cluster0.zhcuuc4.mongodb.net/?retryWrites=true&w=majority
+      options:
+        server_selection_timeout: 5
+        roles:
+          - "dbOwner"
+        server_api:
+          version: "1"
+
+test:
+  clients:
+    default:
+      database: importer_test
+      hosts:
+        - localhost:27017
+      options:
+        read:
+          mode: :primary
+        max_pool_size: 1
+
+production:
+  clients:
+    default:
+      uri: mongodb+srv://importer:0YgljvCi68pcYWb3@cluster0.zhcuuc4.mongodb.net/?retryWrites=true&w=majority
+      options:
+        server_selection_timeout: 5
+        roles:
+          - "dbOwner"
+        server_api:
+          version: "1"
