@@ -44,6 +44,7 @@ group :development, :test do
   gem 'rspec', '~> 3.12'
   gem 'rspec-expectations', '~> 3.12', '>= 3.12.2'
   gem 'rspec-rails', '~> 6.0', '>= 6.0.1'
+  gem 'mongoid-rspec'
   gem 'rubocop', '~> 1.46'
   gem 'rubocop-performance', '~> 1.16'
   gem 'rubocop-rails', '~> 2.18'
@@ -58,8 +59,6 @@ group :development do
 end
 
 group :test do
-  gem 'database_cleaner'
-  gem 'database_cleaner-active_record'
   gem 'simplecov', require: false
   gem 'webmock'
 end

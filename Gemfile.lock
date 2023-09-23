@@ -83,12 +83,6 @@ GEM
     crack (0.4.5)
       rexml
     crass (1.0.6)
-    database_cleaner (2.0.2)
-      database_cleaner-active_record (>= 2, < 3)
-    database_cleaner-active_record (2.1.0)
-      activerecord (>= 5.a)
-      database_cleaner-core (~> 2.0.0)
-    database_cleaner-core (2.0.1)
     date (3.3.3)
     debug (1.8.0)
       irb (>= 1.5.0)
@@ -133,6 +127,16 @@ GEM
       concurrent-ruby (>= 1.0.5, < 2.0)
       mongo (>= 2.18.0, < 3.0.0)
       ruby2_keywords (~> 0.0.5)
+    mongoid-compatibility (0.6.0)
+      activesupport
+      mongoid (>= 2.0)
+    mongoid-rspec (4.1.0)
+      activesupport (>= 3.0.0)
+      mongoid (>= 3.1)
+      mongoid-compatibility (>= 0.5.1)
+      rspec-core (~> 3.3)
+      rspec-expectations (~> 3.3)
+      rspec-mocks (~> 3.3)
     msgpack (1.7.2)
     net-imap (0.3.7)
       date
@@ -283,13 +287,12 @@ DEPENDENCIES
   annotate
   bootsnap
   byebug (~> 11.1, >= 11.1.3)
-  database_cleaner
-  database_cleaner-active_record
   debug
   factory_bot_rails
   faker (~> 3.1, >= 3.1.1)
   mongo (~> 2)
   mongoid (~> 8.1, >= 8.1.2)
+  mongoid-rspec
   pry-byebug (~> 3.10, >= 3.10.1)
   puma (~> 5.0)
   rails (~> 7.0.5)
