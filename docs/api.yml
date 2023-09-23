@@ -1,0 +1,95 @@
+openapi: 3.0.1
+info:
+  title: RubyOnRails Challenge 20230105
+  description: CRUD Products
+  version: "0.1"
+servers:
+  - url: http://localhost:3000
+    description: Local server
+paths:
+  /products:
+    get:
+      summary: List all products paginated
+      parameters:
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ProductsResp"
+components:
+  schemas:
+    ProductsResp:
+      type: object
+      properties:
+        Products:
+          type: array
+          items:
+            $ref: "#/components/schemas/Product"
+        current_page:
+          type: integer
+        total_pages:
+          type: integer
+    Product:
+      type: object
+      properties:
+        code:
+          type: integer
+        status:
+          type: string
+        imported_t:
+          type: string
+          format: date-time
+        url:
+          type: string
+        creator:
+          type: string
+        created_t:
+          type: string
+          format: time
+        last_modified_t:
+          type: string
+          format: time
+        product_name:
+          type: string
+        quantity:
+          type: string
+        brands:
+          type: string
+        categories:
+          type: string
+        labels:
+          type: string
+        cities:
+          type: string
+        purchase_places:
+          type: string
+        stores:
+          type: string
+        ingresdients_text:
+          type: string
+        traces:
+          type: string
+        serving_size:
+          type: string
+        serving_quantity:
+          type: number
+          format: float
+        nutriscore_score:
+          type: number
+          format: integer
+        nutriscore_grade:
+          type: string
+        main_category:
+          type: string
+        image_url:
+          type: string
