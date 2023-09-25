@@ -11,7 +11,7 @@ module Paginatable
     total_pages = total_pages_for(paginatable_model)
     return unless params[:page].to_i > total_pages
 
-    redirect_to url_for(page: total_pages) and return
+    params[:page] = total_pages
   end
 
   def total_pages_for(model, per_page = 10)
