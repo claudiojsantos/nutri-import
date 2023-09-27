@@ -6,7 +6,9 @@ class ProductsController < ApplicationController
     @products = Product.all.page(params[:page]).per(10)
   end
 
-  def show; end
+  def show
+    @product = Product.find_by(code: params[:id])
+  end
 
   def update; end
 
