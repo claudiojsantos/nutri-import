@@ -28,7 +28,7 @@ gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 gem 'bootsnap', require: false
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
-gem "rack-cors"
+gem 'rack-cors'
 
 # mongo
 gem 'mongo', '~> 2'
@@ -62,6 +62,7 @@ group :development do
 end
 
 group :test do
+  gem 'database_cleaner-mongoid'
   gem 'simplecov', require: false
   gem 'webmock'
 end
