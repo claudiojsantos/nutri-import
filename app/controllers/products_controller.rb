@@ -7,7 +7,7 @@ class ProductsController < ApplicationController
   end
 
   def show
-    @product = Product.find_by(code: params[:id])
+    @product = Product.find_by(code: params[:code])
   end
 
   def update; end
