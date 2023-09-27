@@ -15,4 +15,8 @@ RSpec.configure do |config|
   config.use_active_record = false
   config.infer_spec_type_from_file_location!
   config.filter_rails_from_backtrace!
+
+  config.before(:each) do
+    Product.delete_all
+  end
 end
