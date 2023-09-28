@@ -5,5 +5,6 @@ Rails.application.routes.draw do
     resources :products, only: %i[index update delete]
 
     get 'products/:code', to: 'products#show'
+    delete 'products/:code', to: 'products#delete'
   end
 end
