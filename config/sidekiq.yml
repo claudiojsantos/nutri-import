@@ -2,5 +2,5 @@
   :schedule:
     import_products:
       cron: "0 0 * * *"
-      class: "ImportProductsWorker"
+      class: "EnqueueImportJobsWorker"
       description: "Importa lista de produtos diariamente."
