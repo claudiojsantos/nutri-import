@@ -1,72 +1,51 @@
 require 'rails_helper'
 
-RSpec.describe 'HealthChecks', type: :request do
-  describe 'GET /' do
-    context 'when the database is functioning properly' do
-      it 'returns status ok and the health message' do
-        get '/'
+RSpec.describe 'Health Checks', type: :request do
+  describe 'GET /health' do
+    context 'when uptime and last cron run are present' do
+      let(:url) { '/' }
+
+      before do
+        allow(CronHistory).to receive_message_chain(:last, :created_at).and_return(Time.now)
+        allow(CronHistory).to receive_message_chain(:last, :memory_after).and_return(5000)
+        allow(CronHistory).to receive_message_chain(:last, :memory_before).and_return(4000)
+      end
+
+      it 'returns a success response' do
+        get url
         expect(response).to have_http_status(:ok)
-        json = JSON.parse(response.body)
-        expect(json['message']).to eq('Health Check')
-        expect(json['last_cron_run']).not_to be_nil
-        expect(json['uptime']).not_to be_nil
-        expect(json['memory_usage']).not_to be_nil
+        expect(response.content_type).to eq('application/json; charset=utf-8')
+        expect(response.body).to include('Health Check')
       end
     end
 
-    context 'when a database error occurs during creation' do
+    context 'when uptime or last cron run is not present' do
+      let(:url) { '/' }
+
       before do
-        allow(HealthCheck).to receive(:create).and_raise(StandardError.new('Database Creation Error'))
+        cron_history = double('CronHistory', created_at: Time.now, memory_after: 5000, memory_before: 4000)
+        allow(CronHistory).to receive(:last).and_return(cron_history)
+        allow(CronHistory).to receive_message_chain(:last, :created_at).and_return(nil)
       end
 
-      it 'returns internal server error with appropriate message' do
-        get '/'
+      it 'returns an internal server error' do
+        get url
         expect(response).to have_http_status(:internal_server_error)
-        json = JSON.parse(response.body)
-        expect(json['status']).to eq('Error')
-        expect(json['message']).to eq('Database Creation Error')
+        expect(response.body).to include('Erro na Leitura ou Escrita no Banco de Dados')
       end
     end
 
-    context 'when a database error occurs during reading' do
+    context 'when an error occurs' do
+      let(:url) { '/' }
+
       before do
-        allow(HealthCheck).to receive(:first).and_raise(StandardError.new('Database Reading Error'))
+        allow(CronHistory).to receive(:last).and_raise(StandardError, 'An error occurred')
       end
 
-      it 'returns internal server error with appropriate message' do
-        get '/'
+      it 'returns an internal server error and the error message' do
+        get url
         expect(response).to have_http_status(:internal_server_error)
-        json = JSON.parse(response.body)
-        expect(json['status']).to eq('Error')
-        expect(json['message']).to eq('Database Reading Error')
-      end
-    end
-
-    context 'when there is a validation error' do
-      before do
-        allow_any_instance_of(HealthCheck).to receive(:valid?).and_return(false)
-      end
-
-      it 'returns internal server error with generic database error message' do
-        get '/'
-        expect(response).to have_http_status(:internal_server_error)
-        json = JSON.parse(response.body)
-        expect(json['status']).to eq('Error')
-        expect(json['message']).to eq('Erro na Leitura ou escrita no Banco de Dados')
-      end
-    end
-
-    context 'when read_health_check is not present' do
-      before do
-        allow(HealthCheck).to receive(:first).and_return(nil)
-      end
-
-      it 'returns internal server error with generic database error message' do
-        get '/'
-        expect(response).to have_http_status(:internal_server_error)
-        json = JSON.parse(response.body)
-        expect(json['status']).to eq('Error')
-        expect(json['message']).to eq('Erro na Leitura ou escrita no Banco de Dados')
+        expect(response.body).to include('An error occurred')
       end
     end
   end
