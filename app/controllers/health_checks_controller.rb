@@ -1,29 +1,21 @@
 class HealthChecksController < ApplicationController
   def health
-    health_check = HealthCheck.create(message: 'Health Check')
+    message = 'Health Check'
+    last_cron_run = CronHistory.last&.created_at
+    uptime = `uptime`.split(',')[0].split('up ')[1].strip
+    memory_usage = CronHistory.last&.memory_after.to_i - CronHistory.last&.memory_before.to_i
 
-    last_cron_run = DateTime.now
-    uptime = 'uptime'.strip
-    memory_usage = 'free -m'.strip
-
-    health_check = HealthCheck.new(
-      message: 'Health Check',
+    @health_check = {
+      message:,
       last_cron_run:,
       uptime:,
       memory_usage:
-    )
+    }
 
-    if health_check.valid?
-      read_health_check = HealthCheck.first
-
-      if read_health_check.present?
-        render json: health_check.as_json, status: :ok
-      else
-        render json: { status: 'Error', message: 'Erro na Leitura ou escrita no Banco de Dados' },
-               status: :internal_server_error
-      end
+    if last_cron_run.present? && uptime.present?
+      render :health, status: :ok
     else
-      render json: { status: 'Error', message: 'Erro na Leitura ou escrita no Banco de Dados' },
+      render json: { status: 'Error', message: 'Erro na Leitura ou Escrita no Banco de Dados' },
              status: :internal_server_error
     end
   rescue StandardError => e
