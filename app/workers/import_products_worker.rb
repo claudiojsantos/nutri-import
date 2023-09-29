@@ -30,6 +30,20 @@ class ImportProductsWorker
     rescue StandardError => e
       Rails.logger.error("Erro ao importar produtos: #{e.message}")
     end
+
+    cron = CronHistory.last
+
+    if cron
+      finish_cron = DateTime.now
+      memory_after = `ps -o rss= -p #{Process.pid}`.to_i
+      time_elapsed = finish_cron - cron.start_cron
+
+      cron.update(
+        finish_cron:,
+        memory_after:,
+        time_elapsed:
+      )
+    end
   end
 
   private
@@ -68,16 +82,13 @@ class ImportProductsWorker
     begin
       gzip_reader = Zlib::GzipReader.new(StringIO.new(buffer.string))
 
-      puts 'Tentando ler os primeiros bytes descomprimidos...'
       gzip_reader.ungetc(gzip_reader.read(10))
 
-      puts 'Processando cada linha...'
       gzip_reader.each_line do |line|
         break if product_count >= MAX_PRODUCTS
 
         begin
           product_data = JSON.parse(line.strip)
-          puts "Produto: #{product_data['code']} processado"
           process_product(product_data)
           product_count += 1
         rescue JSON::ParserError => e
@@ -131,7 +142,7 @@ class ImportProductsWorker
       ProductHistory.create(
         imported_at: Time.now,
         import_sources: @url,
-        import_by: 'automated_script',
+        imported_by: 'automated_script',
         notes: 'Criação de produto',
         product_data: attributes
       )
