@@ -26,6 +26,8 @@ class Product
   field :main_category, type: String
   field :image_url, type: String
 
+  validates :code, presence: true, uniqueness: true
+  validates :product_name, presence: true
   validates :status, inclusion: { in: %w[draft trash published], message: '%<value>s não é um status válido' }
 
   store_in database: 'import_products', collection: 'products'
