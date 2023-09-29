@@ -1,8 +1,9 @@
+# This module provides pagination functionality for controllers.
 module Paginatable
   extend ActiveSupport::Concern
 
   included do
-    before_action :check_page_range, if: :paginatable_model
+    before_action :check_page_range, if: :paginatable_model, only: %i[index show]
   end
 
   protected
