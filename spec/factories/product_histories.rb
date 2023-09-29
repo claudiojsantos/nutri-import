@@ -1,14 +1,12 @@
 FactoryBot.define do
   factory :product_history do
-    product_code { Faker::Barcode.unique.ean(13) }
-    imported_t { Faker::Time.backward(days: 30) }
-    status { %w[draft published].sample }
+    imported_at { Time.now }
     import_sources { Faker::Internet.url }
     import_by { 'automated_script' }
     notes { 'Criação de produto' }
     product_data do
       {
-        code: Faker::Barcode.unique.ean(13),
+        code: Faker::Number.unique.number(digits: 10),
         url: Faker::Internet.url,
         creator: Faker::Internet.username,
         created_t: Faker::Number.number(digits: 10),
