@@ -35,7 +35,7 @@ RSpec.describe 'Products', type: :request do
         expect(response).to have_http_status(200)
 
         json_response = JSON.parse(response.body)
-        expect(json_response['code']).to eq(123)
+        expect(json_response['code']).to eq('123')
       end
     end
   end
@@ -64,10 +64,43 @@ RSpec.describe 'Products', type: :request do
     end
   end
 
-  # describe 'GET /update' do
-  #   it 'returns http success' do
-  #     get '/products/update'
-  #     expect(response).to have_http_status(:success)
-  #   end
-  # end
+  describe 'PUT /products/:code' do
+    let!(:product) { create(:product) }
+    let(:params) { { product_name: 'Novo Produto' } }
+    let(:url) { "/products/#{product.code}" }
+    let(:params_body) { { product: params } }
+
+    context 'when the post is successfully updated' do
+      it 'returns a success response' do
+        put url, params: params_body.to_json, headers: { 'Content-Type' => 'application/json' }
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse(response.body)['message']).to eq('Produto Atualizado')
+      end
+    end
+
+    context 'when the post is not found' do
+      let(:params) { { code: -1, product: { product_name: 'Novo Produto' } } }
+      let(:url) { "/products/#{params[:code]}" }
+      let(:params_body) { { postagem: params[:product] } }
+
+      it 'returns an error response' do
+        put url, headers: { 'Content-Type' => 'application/json' }, params: params_body.to_json
+        expect(response).to have_http_status(:not_found)
+        expect(JSON.parse(response.body)['errors']).not_to be_empty
+      end
+    end
+
+    context 'when parameters are invalid' do
+      let!(:product) { create(:product) }
+      let(:params) { { product_name: '' } }
+      let(:url) { "/products/#{product.code}" }
+      let(:params_body) { { product: params }.to_json }
+
+      it 'returns an error response' do
+        put url, headers: { 'Content-Type' => 'application/json' }, params: params_body
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(JSON.parse(response.body)['errors']).not_to be_empty
+      end
+    end
+  end
 end
