@@ -1,0 +1,44 @@
+version: "3.8"
+services:
+  web:
+    build: .
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -b '0.0.0.0'"
+    volumes:
+      - ".:/importer"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+      - redis
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - DATABASE_URL=mongodb://db:27017/importer_development
+
+  sidekiq:
+    build: .
+    command: bundle exec sidekiq
+    volumes:
+      - ".:/importer"
+    depends_on:
+      - db
+      - redis
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+
+  db:
+    image: mongo:latest
+    volumes:
+      - mongodata:/data/db
+    ports:
+      - "27017:27017"
+
+  redis:
+    image: redis:latest
+    volumes:
+      - redisdata:/data
+
+volumes:
+  mongodata:
+    driver: local
+  redisdata:
+    driver: local
