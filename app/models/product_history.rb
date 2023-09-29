@@ -4,7 +4,7 @@ class ProductHistory
 
   field :imported_at, type: Time
   field :import_sources, type: String
-  field :import_by, type: String
+  field :imported_by, type: String
   field :notes, type: String
   field :product_data, type: Hash
 
