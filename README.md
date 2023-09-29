@@ -1,4 +1,4 @@
-a# Backend Challenge 20230105 Ruby on Rails - Projeto Nutri-Import
+# Backend Challenge 20230105 Ruby on Rails - Projeto Nutri-Import
 
 Projeto de importação de dados nutricionais de alimentos com API de consulta de dados, utilizando Ruby on Rails e MongoDB.
 
