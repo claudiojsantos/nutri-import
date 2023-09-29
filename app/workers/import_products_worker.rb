@@ -109,7 +109,7 @@ class ImportProductsWorker
                                     'serving_quantity', 'nutriscore_score', 'nutriscore_grade',
                                     'main_category', 'image_url')
     attributes.merge!({
-                        status: 'Draft',
+                        status: 'draft',
                         imported_t: DateTime.now
                       })
 
@@ -117,7 +117,7 @@ class ImportProductsWorker
       ProductHistory.create(
         product_code: code,
         imported_t: Time.now,
-        status: 'Modified',
+        status: 'draft',
         import_sources: @url,
         imported_by: 'automated_script',
         notes: 'atualização de produto',
@@ -127,7 +127,7 @@ class ImportProductsWorker
       ProductHistory.create(
         product_code: code,
         imported_t: Time.now,
-        status: 'Draft',
+        status: 'draft',
         import_sources: @url,
         import_by: 'automated_script',
         notes: 'Criação de produto',
