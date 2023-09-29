@@ -115,26 +115,26 @@ class ImportProductsWorker
 
     if product
       ProductHistory.create(
-        product_code: code,
-        imported_t: Time.now,
-        status: 'draft',
+        imported_at: Time.now,
         import_sources: @url,
         imported_by: 'automated_script',
         notes: 'atualização de produto',
         product_data: product.attributes
       )
+
+      product_data = product_history.product_data.except('id', 'code') if product_history.product_data
+
+      product.update(product_data) if product_data
     else
+      Product.create(attributes)
+
       ProductHistory.create(
-        product_code: code,
-        imported_t: Time.now,
-        status: 'draft',
+        imported_at: Time.now,
         import_sources: @url,
         import_by: 'automated_script',
         notes: 'Criação de produto',
         product_data: attributes
       )
-
-      Product.create(attributes)
     end
   end
 end
