@@ -6,6 +6,7 @@ development:
         server_selection_timeout: 5
         roles:
           - "dbOwner"
+        use_utc: false
         server_api:
           version: "1"
   options:
@@ -20,6 +21,7 @@ test:
       options:
         read:
           mode: :primary
+        use_utc: false
         max_pool_size: 1
   options:
     raise_not_found_error: false
@@ -32,6 +34,7 @@ production:
         server_selection_timeout: 5
         roles:
           - "dbOwner"
+        use_utc: false
         server_api:
           version: "1"
   options:
