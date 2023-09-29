@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :product do
     code { Faker::Number.unique.number(digits: 10) }
-    status { %w[active inactive archived].sample }
+    status { %w[draft published].sample }
     imported_t { (Faker::Date.backward(days: 90) + 1.hours).to_datetime }
     url { Faker::Internet.url }
     creator { Faker::Name.name }
