@@ -3,12 +3,34 @@ info:
   title: RubyOnRails Challenge 20230105
   description: CRUD Products
   version: "0.1"
+  contact:
+    name: Cláudio Santos
+    email: "claudio@sistnet.com.br"
+    url: "https://www.linkedin.com/in/claudio-santos-3b071140/"
 servers:
   - url: http://localhost:3000
-    description: Local server
+    description: Docker Server or Local Server
+tags:
+  - name: products
+    description: Products Management
 paths:
+  /:
+    get:
+      tags:
+        - products
+      summary: "HealthCheck - API Details"
+      responses:
+        "200":
+          description: Status da API
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/HealthCheck"
   /products:
     get:
+      tags:
+        - products
       summary: List all products paginated
       parameters:
         - name: page
@@ -24,10 +46,104 @@ paths:
             application/json:
               schema:
                 type: array
+                $ref: "#/components/schemas/ProductsResp"
+  /products/{code}:
+    get:
+      tags:
+        - products
+      summary: Get product by code
+      parameters:
+        - name: code
+          in: path
+          description: Unique Product code
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Product
+          content:
+            application/json:
+              schema:
+                type: object
                 items:
-                  $ref: "#/components/schemas/ProductsResp"
+                  $ref: "#/components/schemas/Product"
+    put:
+      tags:
+        - products
+      summary: Update product by code
+      parameters:
+        - name: code
+          in: path
+          description: Unique Product code
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Product object
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                product:
+                  $ref: "#/components/schemas/ProductUpdate"
+      responses:
+        "200":
+          description: Product updated
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/ProductUpdated"
+        "404":
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/NotFound"
+    delete:
+      tags:
+        - products
+      summary: Delete product by code - Status change
+      parameters:
+        - name: code
+          in: path
+          description: Unique Product code
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Product deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/ProductDeleted"
+        "404":
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/NotFound"
 components:
   schemas:
+    HealthCheck:
+      type: object
+      properties:
+        message:
+          type: string
+        ultimo_cron:
+          type: string
+          format: date-time
+        uptime:
+          type: string
+        memory_usage:
+          type: integer
     ProductsResp:
       type: object
       properties:
@@ -93,3 +209,76 @@ components:
           type: string
         image_url:
           type: string
+    ProductUpdate:
+      type: object
+      properties:
+        status:
+          type: string
+        imported_t:
+          type: string
+          format: date-time
+        url:
+          type: string
+        creator:
+          type: string
+        created_t:
+          type: string
+          format: time
+        last_modified_t:
+          type: string
+          format: time
+        product_name:
+          type: string
+        quantity:
+          type: string
+        brands:
+          type: string
+        categories:
+          type: string
+        labels:
+          type: string
+        cities:
+          type: string
+        purchase_places:
+          type: string
+        stores:
+          type: string
+        ingresdients_text:
+          type: string
+        traces:
+          type: string
+        serving_size:
+          type: string
+        serving_quantity:
+          type: number
+          format: float
+        nutriscore_score:
+          type: number
+          format: integer
+        nutriscore_grade:
+          type: string
+        main_category:
+          type: string
+        image_url:
+          type: string
+    ProductUpdated:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A message indicating the product was updated successfully
+          example: Produto Atualizado
+    ProductDeleted:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A message indicating the product was deleted successfully
+          example: Produto excluído com sucesso
+    NotFound:
+      type: object
+      properties:
+        error:
+          type: string
+          description: A message indicating the product not found
+          example: Produto não encontrado
