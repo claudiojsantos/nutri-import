@@ -1,7 +1,9 @@
 development:
   clients:
     default:
-      uri: mongodb+srv://importer:0YgljvCi68pcYWb3@cluster0.zhcuuc4.mongodb.net/?retryWrites=true&w=majority
+      database: importer_development
+      hosts:
+        - db:27017
       options:
         server_selection_timeout: 5
         roles:
